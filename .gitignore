@@ -7,3 +7,20 @@ tools/dataset_lists.yaml
 tools/output
 .ipynb_checkpoints
 *.png
+
+
+# Distribution / packaging
+*/bin/
+*/build/
+*/develop-eggs/
+*/dist/
+*/eggs/
+*/lib/
+*/lib64/
+*/parts/
+*/sdist/
+*/var/
+*.egg-info/
+.installed.cfg
+*.egg
+
