@@ -5,3 +5,5 @@ Log/
 output/
 tools/dataset_lists.yaml
 tools/output
+.ipynb_checkpoints
+*.png
