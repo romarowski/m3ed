@@ -13,7 +13,14 @@ class DataLoader():
         pass
     def load_events(self, timestamp: int):
         """
-        Defines an event dictionary whose strucure is
+        Defines an event dictionary structured as 
+        
+        The idea is that the event vectors are 1-dimensional, if you wanted to
+        find all events that happen at the same time you need to do some sort 
+        of masking. If you do this "before-hand" and save everything in a dict
+        with O(1) access time you can get an array of all events hashed by 
+        timestamp. Might make sense to transform the h5py dataset to match 
+        this?
 
         events = {t_i : [(x_ij, y_ij, p_ij), ...]}
 
@@ -22,7 +29,37 @@ class DataLoader():
 
         """
         self.hf = h5py.File(self.filename, 'r')
-        ###create a dict to access each event by timestamp
+        self.events = {"left": {},
+                       "right": {}} 
+
+        for left_or_right in ["left", "right"]: 
+            ###create a dict to access each event by timestamp
+            t, x, y, p = self._parse_events_by_camera(timestamp,
+                                                      left_or_right=left_or_right) 
+           
+            zipped_events = zip (t, x, y,p)
+            
+            for t, x, y, p in zipped_events:
+                if t not in self.events[left_or_right]:
+                    self.events[left_or_right][t] = []
+                self.events[left_or_right][t].append((x, y, p))
+                
+                #print('RAM Used (GB):', psutil.virtual_memory()[3]/1000000000)
+
+
+        pass
+
+    def _save_events_to_dict(self,
+                             dict_to_use : dict,
+                             zipped_events : tuple):
+        """
+        The idea is that the event vectors are 1-dimensional, if you wanted to
+        find all events that happen at the same time you need to do some sort 
+        of masking. If you do this "before-hand" and save everything in a dict
+        with O(1) access time you can get an array of all events hased by 
+        timestamp.
+        """
+
         t, x, y, p = self._parse_events_by_camera(timestamp,
                                                   left_or_right='left') 
        
@@ -34,10 +71,6 @@ class DataLoader():
                 self.events_left[t] = []
             self.events_left[t].append((x, y, p))
             print('RAM Used (GB):', psutil.virtual_memory()[3]/1000000000)
-
-
-        #self.events_left = dict(zip(keys, zip(x, y, p))) 
-        pass
 
     
     def _parse_events_by_camera(self, 
@@ -52,6 +85,7 @@ class DataLoader():
         """
         hf = self.hf
 
+        #TODO does this +1 here make sense? this is a design choice
         start_idx = hf['prophesee'][left_or_right]['ms_map_idx'][timestamp]
         end_idx = hf['prophesee'][left_or_right]['ms_map_idx'][timestamp+1]
 
