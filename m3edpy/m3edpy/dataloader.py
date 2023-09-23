@@ -8,12 +8,18 @@ class DataLoader():
     and allows to load Events, OVC and LiDAR independently
 
     """
-    def __init__(self, filename: str):
+    def __init__(
+            self,
+            filename: str
+            ):
         self.filename = filename
+        self.hf = None
+        self.events = None
         pass
-    def load_events(self, timestamp: int):
+    def load_events_to_dict(self, timestamp: int):
         """
         Defines an event dictionary structured as 
+        events = {t_i : [(x_ij, y_ij, p_ij), ...]}
         
         The idea is that the event vectors are 1-dimensional, if you wanted to
         find all events that happen at the same time you need to do some sort 
@@ -22,7 +28,6 @@ class DataLoader():
         timestamp. Might make sense to transform the h5py dataset to match 
         this?
 
-        events = {t_i : [(x_ij, y_ij, p_ij), ...]}
 
             Parameters:
                timestamp (int): milisecond timestamp
@@ -34,8 +39,10 @@ class DataLoader():
 
         for left_or_right in ["left", "right"]: 
             ###create a dict to access each event by timestamp
-            t, x, y, p = self._parse_events_by_camera(timestamp,
-                                                      left_or_right=left_or_right) 
+            t, x, y, p = (self
+                          ._parse_events_by_camera(timestamp,
+                                                   left_or_right=left_or_right)
+                          )
            
             zipped_events = zip (t, x, y,p)
             
@@ -49,28 +56,6 @@ class DataLoader():
 
         pass
 
-    def _save_events_to_dict(self,
-                             dict_to_use : dict,
-                             zipped_events : tuple):
-        """
-        The idea is that the event vectors are 1-dimensional, if you wanted to
-        find all events that happen at the same time you need to do some sort 
-        of masking. If you do this "before-hand" and save everything in a dict
-        with O(1) access time you can get an array of all events hased by 
-        timestamp.
-        """
-
-        t, x, y, p = self._parse_events_by_camera(timestamp,
-                                                  left_or_right='left') 
-       
-        zipped_events = zip (t, x, y,p)
-        
-        self.events_left = {} 
-        for t, x, y, p in zipped_events:
-            if t not in self.events_left:
-                self.events_left[t] = []
-            self.events_left[t].append((x, y, p))
-            print('RAM Used (GB):', psutil.virtual_memory()[3]/1000000000)
 
     
     def _parse_events_by_camera(self, 
