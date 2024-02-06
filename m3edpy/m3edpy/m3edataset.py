@@ -1,6 +1,9 @@
+from typing import Callable, List, Optional, Union
+
 from tonic.dataset import Dataset
 
-from typing import Callable, List, Optional, Union
+import requests
+
 
 class M3ED(Dataset):
     """`M3ED <https://m3ed.io/>`_
@@ -39,6 +42,24 @@ class M3ED(Dataset):
             target_transform: Optional[Callable] = None,
             transforms: Optional[Callable] = None,
     ):
-        super().__init__(save_to, transform, target_transform, transforms)
-        self._check_integrity()
-        self._load_metadata()
+        super().__init__(
+            save_to,
+            transform,
+            target_transform,
+            transforms
+        )
+
+        # download dataset_list.yaml
+        # right now download of yaml is inside of te __init__ which seems to
+        # contradict tonics approach to have file locations hardcoded on the 
+        # class declaration
+        response = requests.get(self.dataset_list_url)
+        #save response to argument 
+        self.dataset_list = response.text
+
+
+        pass
+
+
+    
+

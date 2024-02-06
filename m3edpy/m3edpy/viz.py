@@ -16,7 +16,7 @@ class EventFigure():
         Polarity is encoded as blue = 0; red = 1 
 
             Parameters:
-               timestamp (int): milisecond timestamp of the events to plot 
+               timestamp (int): millisecond timestamp of the events to plot 
             Returns:
                 fig (Figure): 
                 axl (Axes): left camera events axes
@@ -32,7 +32,7 @@ class EventFigure():
         fig, (axl, axr) = plt.subplots(nrows=1, ncols=2, 
                                        figsize=(16, 9),
                                        dpi=300)
-        fig.suptitle(f"Prophesee events at timestamp {timestamp} microseconds")
+        fig.subtitle(f"Prophesee events at timestamp {timestamp} microseconds")
 
         axl.set_title("Left events")
         axr.set_title("Right events")

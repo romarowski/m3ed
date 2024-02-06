@@ -64,8 +64,8 @@ class DataLoader():
         """
         Capture event data timestamp t, x, y, polarity p
 
-        Uses the milisecond map, given certain timestamp will grab all 
-        available data from the timestamp until the next milisecond 
+        Uses the millisecond map, given certain timestamp will grab all 
+        available data from the timestamp until the next millisecond 
 
         """
         hf = self.hf

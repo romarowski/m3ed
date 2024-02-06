@@ -1,3 +1,5 @@
+condaenv/
+.vscode/
 utils/
 __pycache__
 Log/
@@ -7,6 +9,10 @@ tools/dataset_lists.yaml
 tools/output
 .ipynb_checkpoints
 *.png
+
+
+#vim
+*.swp
 
 
 # Distribution / packaging
@@ -24,3 +30,4 @@ tools/output
 .installed.cfg
 *.egg
 condaenv/
+
